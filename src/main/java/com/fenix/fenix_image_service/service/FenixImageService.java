@@ -24,10 +24,11 @@ public class FenixImageService {
      * @param outputFile   the output file where the resized image will be saved
      * @param targetWidth  the target width of the image (set to 0 to calculate based on height)
      * @param targetHeight the target height of the image (set to 0 to calculate based on width)
+     * @return the absolute path of the output file
      * @throws IllegalArgumentException if the image format is unsupported or dimensions are invalid
      * @throws RuntimeException         if an error occurs during processing
      */
-    public void resize(File inputFile, File outputFile, int targetWidth, int targetHeight) {
+    public String resize(File inputFile, File outputFile, int targetWidth, int targetHeight) {
         try {
             String formatName = imgHelp.getFormatName(inputFile);
             imgHelp.formatException(formatName);
@@ -63,6 +64,7 @@ public class FenixImageService {
             g2d.dispose();
 
             ImageIO.write(resizedImage, formatName, outputFile);
+            return outputFile.getAbsolutePath();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -78,12 +80,12 @@ public class FenixImageService {
      * @param y          the y-coordinate of the top-left corner of the cropping rectangle
      * @param width      the width of the cropping rectangle
      * @param height     the height of the cropping rectangle
+     * @return the absolute path of the output file
      * @throws IllegalArgumentException if the cropping rectangle exceeds the bounds of the image
      * @throws RuntimeException         if an error occurs during processing
      */
-    public void crop(File inputFile, File outputFile, int x, int y, int width, int height) {
+    public String crop(File inputFile, File outputFile, int x, int y, int width, int height) {
         try {
-            // Get the format of the input file and check if it's supported
             String formatName = imgHelp.getFormatName(inputFile);
             imgHelp.formatException(formatName);
 
@@ -98,6 +100,7 @@ public class FenixImageService {
             BufferedImage croppedImage = originalImage.getSubimage(x, y, width, height);
 
             ImageIO.write(croppedImage, formatName, outputFile);
+            return outputFile.getAbsolutePath();
         } catch (Exception e) {
             throw new RuntimeException("Error cropping image: " + e.getMessage(), e);
         }
@@ -110,9 +113,10 @@ public class FenixImageService {
      * @param inputFile  the input image file to be rotated
      * @param outputFile the output file where the rotated image will be saved
      * @param angle      the angle in degrees for rotation (positive for clockwise, negative for counterclockwise)
+     * @return the absolute path of the output file
      * @throws RuntimeException if an error occurs during processing
      */
-    public void rotate(File inputFile, File outputFile, double angle) {
+    public String rotate(File inputFile, File outputFile, double angle) {
         try {
             String formatName = imgHelp.getFormatName(inputFile);
             imgHelp.formatException(formatName);
@@ -121,17 +125,15 @@ public class FenixImageService {
             int width = originalImage.getWidth();
             int height = originalImage.getHeight();
 
-            // Create a new buffered image for the rotated image
             BufferedImage rotatedImage = new BufferedImage(width, height, originalImage.getType());
             Graphics2D g2d = rotatedImage.createGraphics();
 
-            // Rotate around the center of the image
             g2d.rotate(Math.toRadians(angle), width / 2.0, height / 2.0);
             g2d.drawImage(originalImage, 0, 0, null);
             g2d.dispose();
 
-            // Save the rotated image
             ImageIO.write(rotatedImage, formatName, outputFile);
+            return outputFile.getAbsolutePath();
         } catch (Exception e) {
             throw new RuntimeException("Error rotating image: " + e.getMessage(), e);
         }
@@ -143,16 +145,17 @@ public class FenixImageService {
      * @param inputFile    the input image file to be converted
      * @param outputFile   the output file where the converted image will be saved
      * @param targetFormat the desired format of the output image (e.g., "jpg", "png", "bmp")
+     * @return the absolute path of the output file
      * @throws IllegalArgumentException if the target format is unsupported
      * @throws RuntimeException         if an error occurs during processing
      */
-    public void convert(File inputFile, File outputFile, String targetFormat) {
+    public String convert(File inputFile, File outputFile, String targetFormat) {
         try {
             BufferedImage originalImage = ImageIO.read(inputFile);
             imgHelp.formatException(targetFormat);
 
-            // Save the image in the specified target format
             ImageIO.write(originalImage, targetFormat, outputFile);
+            return outputFile.getAbsolutePath();
         } catch (Exception e) {
             throw new RuntimeException("Error converting image format: " + e.getMessage(), e);
         }
@@ -167,15 +170,15 @@ public class FenixImageService {
      * @param x            the x-coordinate where the watermark will be placed
      * @param y            the y-coordinate where the watermark will be placed
      * @param opacity      the opacity of the watermark (range: 0.0 to 1.0)
+     * @return the absolute path of the output file
      * @throws RuntimeException if an error occurs during processing
      */
-    public void textWatermark(File inputFile, File outputFile, String watermarkText, int x, int y, float opacity) {
+    public String textWatermark(File inputFile, File outputFile, String watermarkText, int x, int y, float opacity) {
         try {
             String formatName = imgHelp.getFormatName(inputFile);
             imgHelp.formatException(formatName);
             BufferedImage originalImage = ImageIO.read(inputFile);
 
-            // Add the watermark text to the image
             Graphics2D g2d = (Graphics2D) originalImage.getGraphics();
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
             g2d.setFont(new Font("Arial", Font.BOLD, 30));
@@ -183,8 +186,8 @@ public class FenixImageService {
             g2d.drawString(watermarkText, x, y);
             g2d.dispose();
 
-            // Save the watermarked image
             ImageIO.write(originalImage, formatName, outputFile);
+            return outputFile.getAbsolutePath();
         } catch (Exception e) {
             throw new RuntimeException("Error adding watermark: " + e.getMessage(), e);
         }
@@ -195,15 +198,15 @@ public class FenixImageService {
      *
      * @param inputFile  the input image file to be processed
      * @param outputFile the output file where the inverted image will be saved
+     * @return the absolute path of the output file
      * @throws RuntimeException if an error occurs during processing
      */
-    public void invert(File inputFile, File outputFile) {
+    public String invert(File inputFile, File outputFile) {
         try {
             String formatName = imgHelp.getFormatName(inputFile);
             imgHelp.formatException(formatName);
             BufferedImage originalImage = ImageIO.read(inputFile);
 
-            // Loop through each pixel and invert its color
             for (int y = 0; y < originalImage.getHeight(); y++) {
                 for (int x = 0; x < originalImage.getWidth(); x++) {
                     int rgba = originalImage.getRGB(x, y);
@@ -213,8 +216,8 @@ public class FenixImageService {
                 }
             }
 
-            // Save the inverted image
             ImageIO.write(originalImage, formatName, outputFile);
+            return outputFile.getAbsolutePath();
         } catch (Exception e) {
             throw new RuntimeException("Error inverting colors: " + e.getMessage(), e);
         }
@@ -225,15 +228,15 @@ public class FenixImageService {
      *
      * @param inputFile  the input image file to be processed
      * @param outputFile the output file where the grayscale image will be saved
+     * @return the absolute path of the output file
      * @throws RuntimeException if an error occurs during processing
      */
-    public void grayscale(File inputFile, File outputFile) {
+    public String grayscale(File inputFile, File outputFile) {
         try {
             String formatName = imgHelp.getFormatName(inputFile);
             imgHelp.formatException(formatName);
             BufferedImage originalImage = ImageIO.read(inputFile);
 
-            // Loop through each pixel and convert it to grayscale
             for (int y = 0; y < originalImage.getHeight(); y++) {
                 for (int x = 0; x < originalImage.getWidth(); x++) {
                     int rgba = originalImage.getRGB(x, y);
@@ -244,8 +247,8 @@ public class FenixImageService {
                 }
             }
 
-            // Save the grayscale image
             ImageIO.write(originalImage, formatName, outputFile);
+            return outputFile.getAbsolutePath();
         } catch (Exception e) {
             throw new RuntimeException("Error applying grayscale: " + e.getMessage(), e);
         }

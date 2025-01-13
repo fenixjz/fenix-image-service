@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class FenixImageHelper {
+class FenixImageHelper {
 
     /**
      * Determines the format of an image file based on its extension.

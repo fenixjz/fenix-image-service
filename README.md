@@ -8,14 +8,14 @@
 
 - [Installation](#installation)
 - [Methods](#methods)
-    - [Resize](#resize)
-    - [Crop](#crop)
-    - [Rotate](#rotate)
-    - [Convert](#convert)
-    - [Text Watermark](#text-watermark)
-    - [Invert Colors](#invert-colors)
-    - [Grayscale](#grayscale)
-    - [Allowed Formats](#allowed-formats)
+  - [Resize](#resize)
+  - [Crop](#crop)
+  - [Rotate](#rotate)
+  - [Convert](#convert)
+  - [Text Watermark](#text-watermark)
+  - [Invert Colors](#invert-colors)
+  - [Grayscale](#grayscale)
+  - [Allowed Formats](#allowed-formats)
 - [Usage Example](#usage-example)
 
 ---
@@ -30,10 +30,10 @@ Add the following to your `pom.xml` file:
 
 ```xml
 <repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
 </repositories>
 ```
 
@@ -43,9 +43,9 @@ Include the dependency for this library:
 
 ```xml
 <dependency>
-    <groupId>com.github.fenixjz</groupId>
-    <artifactId>fenix-image-service</artifactId>
-    <version>1.0.0</version>
+  <groupId>com.github.fenixjz</groupId>
+  <artifactId>fenix-image-service</artifactId>
+  <version>1.0.1</version>
 </dependency>
 ```
 
@@ -59,7 +59,7 @@ Resize an image while maintaining its aspect ratio.
 
 #### Method Signature:
 ```java
-public void resize(File inputFile, File outputFile, int targetWidth, int targetHeight)
+public String resize(File inputFile, File outputFile, int targetWidth, int targetHeight)
 ```
 
 #### Parameters:
@@ -68,9 +68,13 @@ public void resize(File inputFile, File outputFile, int targetWidth, int targetH
 - **targetWidth**: Desired width (set `0` to calculate based on height).
 - **targetHeight**: Desired height (set `0` to calculate based on width).
 
+#### Returns:
+- **String**: The absolute path of the output file.
+
 #### Example:
 ```java
-fenixImageService.resize(new File("input.jpg"), new File("output.jpg"), 800, 0);
+String outputPath = fenixImageService.resize(new File("input.jpg"), new File("output.jpg"), 800, 0);
+System.out.println("Resized image saved at: " + outputPath);
 ```
 
 ---
@@ -81,7 +85,7 @@ Crop a specific portion of an image based on coordinates and dimensions.
 
 #### Method Signature:
 ```java
-public void crop(File inputFile, File outputFile, int x, int y, int width, int height)
+public String crop(File inputFile, File outputFile, int x, int y, int width, int height)
 ```
 
 #### Parameters:
@@ -92,9 +96,13 @@ public void crop(File inputFile, File outputFile, int x, int y, int width, int h
 - **width**: Width of the cropped area.
 - **height**: Height of the cropped area.
 
+#### Returns:
+- **String**: The absolute path of the output file.
+
 #### Example:
 ```java
-fenixImageService.crop(new File("input.jpg"), new File("cropped.jpg"), 100, 50, 300, 300);
+String outputPath = fenixImageService.crop(new File("input.jpg"), new File("cropped.jpg"), 100, 50, 300, 300);
+System.out.println("Cropped image saved at: " + outputPath);
 ```
 
 ---
@@ -105,7 +113,7 @@ Rotate an image by a specified angle around its center.
 
 #### Method Signature:
 ```java
-public void rotate(File inputFile, File outputFile, double angle)
+public String rotate(File inputFile, File outputFile, double angle)
 ```
 
 #### Parameters:
@@ -113,9 +121,13 @@ public void rotate(File inputFile, File outputFile, double angle)
 - **outputFile**: The output file where the rotated image will be saved.
 - **angle**: Rotation angle in degrees.
 
+#### Returns:
+- **String**: The absolute path of the output file.
+
 #### Example:
 ```java
-fenixImageService.rotate(new File("input.jpg"), new File("rotated.jpg"), 45);
+String outputPath = fenixImageService.rotate(new File("input.jpg"), new File("rotated.jpg"), 45);
+System.out.println("Rotated image saved at: " + outputPath);
 ```
 
 ---
@@ -126,7 +138,7 @@ Convert an image from one format to another.
 
 #### Method Signature:
 ```java
-public void convert(File inputFile, File outputFile, String targetFormat)
+public String convert(File inputFile, File outputFile, String targetFormat)
 ```
 
 #### Parameters:
@@ -134,9 +146,13 @@ public void convert(File inputFile, File outputFile, String targetFormat)
 - **outputFile**: The output file where the converted image will be saved.
 - **targetFormat**: The target format (e.g., "jpg", "png").
 
+#### Returns:
+- **String**: The absolute path of the output file.
+
 #### Example:
 ```java
-fenixImageService.convert(new File("input.bmp"), new File("output.png"), "png");
+String outputPath = fenixImageService.convert(new File("input.bmp"), new File("output.png"), "png");
+System.out.println("Converted image saved at: " + outputPath);
 ```
 
 ---
@@ -147,7 +163,7 @@ Add a text watermark to an image.
 
 #### Method Signature:
 ```java
-public void textWatermark(File inputFile, File outputFile, String watermarkText, int x, int y, float opacity)
+public String textWatermark(File inputFile, File outputFile, String watermarkText, int x, int y, float opacity)
 ```
 
 #### Parameters:
@@ -158,9 +174,13 @@ public void textWatermark(File inputFile, File outputFile, String watermarkText,
 - **y**: Y-coordinate of the watermark.
 - **opacity**: Opacity of the watermark (range: 0.0 to 1.0).
 
+#### Returns:
+- **String**: The absolute path of the output file.
+
 #### Example:
 ```java
-fenixImageService.textWatermark(new File("input.jpg"), new File("watermarked.jpg"), "Watermark", 50, 50, 0.5f);
+String outputPath = fenixImageService.textWatermark(new File("input.jpg"), new File("watermarked.jpg"), "Watermark", 50, 50, 0.5f);
+System.out.println("Watermarked image saved at: " + outputPath);
 ```
 
 ---
@@ -171,16 +191,20 @@ Invert the colors of an image.
 
 #### Method Signature:
 ```java
-public void invert(File inputFile, File outputFile)
+public String invert(File inputFile, File outputFile)
 ```
 
 #### Parameters:
 - **inputFile**: The input image file.
 - **outputFile**: The output file where the inverted image will be saved.
 
+#### Returns:
+- **String**: The absolute path of the output file.
+
 #### Example:
 ```java
-fenixImageService.invert(new File("input.jpg"), new File("inverted.jpg"));
+String outputPath = fenixImageService.invert(new File("input.jpg"), new File("inverted.jpg"));
+System.out.println("Inverted image saved at: " + outputPath);
 ```
 
 ---
@@ -191,16 +215,20 @@ Convert an image to grayscale.
 
 #### Method Signature:
 ```java
-public void grayscale(File inputFile, File outputFile)
+public String grayscale(File inputFile, File outputFile)
 ```
 
 #### Parameters:
 - **inputFile**: The input image file.
 - **outputFile**: The output file where the grayscale image will be saved.
 
+#### Returns:
+- **String**: The absolute path of the output file.
+
 #### Example:
 ```java
-fenixImageService.grayscale(new File("input.jpg"), new File("grayscale.jpg"));
+String outputPath = fenixImageService.grayscale(new File("input.jpg"), new File("grayscale.jpg"));
+System.out.println("Grayscale image saved at: " + outputPath);
 ```
 
 ---
@@ -213,6 +241,9 @@ Retrieve a list of supported image formats for writing.
 ```java
 public List<String> allowedFormats()
 ```
+
+#### Returns:
+- **List<String>**: A list of supported image format names (e.g., "jpg", "png", "bmp").
 
 #### Example:
 ```java
@@ -240,28 +271,36 @@ public class ImageProcessor {
     public void processImages() {
         try {
             // Resize
-            fenixImageService.resize(new File("input.jpg"), new File("resized.jpg"), 800, 600);
+            String resizedPath = fenixImageService.resize(new File("input.jpg"), new File("resized.jpg"), 800, 600);
+            System.out.println("Resized image saved at: " + resizedPath);
 
             // Crop
-            fenixImageService.crop(new File("input.jpg"), new File("cropped.jpg"), 100, 50, 300, 200);
+            String croppedPath = fenixImageService.crop(new File("input.jpg"), new File("cropped.jpg"), 100, 50, 300, 200);
+            System.out.println("Cropped image saved at: " + croppedPath);
 
             // Rotate
-            fenixImageService.rotate(new File("input.jpg"), new File("rotated.jpg"), 45);
+            String rotatedPath = fenixImageService.rotate(new File("input.jpg"), new File("rotated.jpg"), 45);
+            System.out.println("Rotated image saved at: " + rotatedPath);
 
             // Convert
-            fenixImageService.convert(new File("input.jpg"), new File("output.png"), "png");
+            String convertedPath = fenixImageService.convert(new File("input.jpg"), new File("output.png"), "png");
+            System.out.println("Converted image saved at: " + convertedPath);
 
             // Add Watermark
-            fenixImageService.textWatermark(new File("input.jpg"), new File("watermarked.jpg"), "Watermark", 50, 50, 0.7f);
+            String watermarkedPath = fenixImageService.textWatermark(new File("input.jpg"), new File("watermarked.jpg"), "Watermark", 50, 50, 0.7f);
+            System.out.println("Watermarked image saved at: " + watermarkedPath);
 
             // Invert Colors
-            fenixImageService.invert(new File("input.jpg"), new File("inverted.jpg"));
+            String invertedPath = fenixImageService.invert(new File("input.jpg"), new File("inverted.jpg"));
+            System.out.println("Inverted image saved at: " + invertedPath);
 
             // Convert to Grayscale
-            fenixImageService.grayscale(new File("input.jpg"), new File("grayscale.jpg"));
+            String grayscalePath = fenixImageService.grayscale(new File("input.jpg"), new File("grayscale.jpg"));
+            System.out.println("Grayscale image saved at: " + grayscalePath);
 
             // Get Supported Formats
-            System.out.println("Supported Formats: " + fenixImageService.allowedFormats());
+            List<String> formats = fenixImageService.allowedFormats();
+            System.out.println("Supported formats: " + formats);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -270,4 +309,4 @@ public class ImageProcessor {
 ```
 
 Feel free to integrate the **Fenix Image Manipulation Service** and enhance your projects with powerful image processing features!
-```
+
